@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import { useGeo, useResults } from "../lib/data";
 import { Counter } from "../components/ui";
 import { fmt0, fmt2 } from "../lib/format";
+import { useT } from "../lib/i18n";
 
 function DrawnGoias() {
   const { data: geo } = useGeo();
@@ -41,12 +42,13 @@ function DrawnGoias() {
 
 export function Hero() {
   const { data: res } = useResults();
+  const t = useT();
   const best = res?.cv_summary.T2_RandomForest;
   const stats = [
-    { v: res?.n_total ?? 660, f: fmt0, label: "observações município-safra" },
-    { v: res?.n_municipios ?? 55, f: fmt0, label: "municípios goianos" },
-    { v: res ? res.anos.length : 12, f: fmt0, label: "safras (2014–2025)" },
-    { v: best?.R2_mean ?? 0.55, f: fmt2, label: "R² médio do Random Forest (validação cruzada)" },
+    { v: res?.n_total ?? 660, f: fmt0, label: t.hero.stats[0] },
+    { v: res?.n_municipios ?? 55, f: fmt0, label: t.hero.stats[1] },
+    { v: res ? res.anos.length : 12, f: fmt0, label: t.hero.stats[2] },
+    { v: best?.R2_mean ?? 0.55, f: fmt2, label: t.hero.stats[3] },
   ];
 
   return (
@@ -56,7 +58,7 @@ export function Hero() {
       <div className="container-x relative grid items-center gap-10 pb-16 lg:grid-cols-[1.15fr_1fr] lg:pb-24">
         <div>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="eyebrow">
-            Dissertação de mestrado · Engenharia Agrícola · UEG
+            {t.hero.eyebrow}
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -64,18 +66,18 @@ export function Hero() {
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             className="mt-5 font-display text-[2.9rem] font-medium leading-[0.98] tracking-tight text-stone-50 sm:text-7xl"
           >
-            O clima conta<br />
-            a história da <span className="italic text-grain-400">safra</span>.
+            {t.hero.l1}<br />
+            {t.hero.l2} <span className="italic text-grain-400">{t.hero.em}</span>.
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.8 }} className="mt-6 max-w-xl text-lg leading-relaxed text-stone-400">
-            Um atlas interativo da produtividade da soja em Goiás. Explore doze safras no mapa, compare quatro modelos de aprendizado de máquina e simule cenários climáticos com um Random Forest que roda direto no seu navegador.
+            {t.hero.lead}
           </motion.p>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }} className="mt-9 flex flex-wrap gap-3">
             <a href="#simulador" className="group rounded-full bg-grain-400 px-6 py-3 font-medium text-ink-950 transition hover:bg-grain-300">
-              Simular uma safra
+              {t.hero.cta1}
             </a>
             <a href="#atlas" className="flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 text-stone-200 transition hover:border-white/40">
-              Explorar o mapa <ArrowDown size={16} className="transition group-hover:translate-y-0.5" />
+              {t.hero.cta2} <ArrowDown size={16} className="transition group-hover:translate-y-0.5" />
             </a>
           </motion.div>
         </div>

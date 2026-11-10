@@ -6,7 +6,8 @@ import { useDataset, useModel } from "../lib/data";
 import { useAtlas } from "../lib/store";
 import { predictForest, treeSpread } from "../lib/model";
 import { fmt0, fmt1, fmt2 } from "../lib/format";
-import { Reveal, SectionHeader, Skeleton, Slider } from "../components/ui";
+import { Reveal, SectionHeader, Skeleton, Slider, TitleText } from "../components/ui";
+import { useT } from "../lib/i18n";
 import { TipBox } from "../components/ChartTooltip";
 import type { Row } from "../lib/types";
 
@@ -25,6 +26,7 @@ export function Simulator() {
   const { data: rows } = useDataset();
   const { data: model } = useModel();
   const { selected, select } = useAtlas();
+  const t = useT();
   const mun = selected ?? "Rio Verde";
 
   const munRows = useMemo(() => (rows ?? []).filter((r) => r.mun === mun), [rows, mun]);
@@ -37,12 +39,12 @@ export function Simulator() {
     const dry = munRows.reduce((a, b) => (b.chuva < a.chuva ? b : a));
     const wet = munRows.reduce((a, b) => (b.chuva > a.chuva ? b : a));
     return {
-      media: { c: { chuva: round(avg("chuva"), 0), tmax: round(avg("tmax")), tmin: round(avg("tmin")), ur: round(avg("ur")) }, label: "Média 2014–2025" },
-      seca: { c: pick(dry), label: `Mais seca (${dry.safra})` },
-      chuvosa: { c: pick(wet), label: `Mais chuvosa (${wet.safra})` },
+      media: { c: { chuva: round(avg("chuva"), 0), tmax: round(avg("tmax")), tmin: round(avg("tmin")), ur: round(avg("ur")) }, label: t.sim.avg },
+      seca: { c: pick(dry), label: t.sim.dry(dry.safra) },
+      chuvosa: { c: pick(wet), label: t.sim.wet(wet.safra) },
       histProd: avg("prod"),
     };
-  }, [munRows]);
+  }, [munRows, t]);
 
   const [clim, setClim] = useState<Climate | null>(null);
   const [preset, setPreset] = useState<"media" | "seca" | "chuvosa" | null>("media");
@@ -87,21 +89,21 @@ export function Simulator() {
     <section id="simulador" className="relative scroll-mt-16 py-24">
       <div className="absolute inset-x-0 top-1/3 -z-10 mx-auto h-96 max-w-4xl rounded-full bg-grain-400/[0.06] blur-[100px]" />
       <div className="container-x">
-        <SectionHeader eyebrow="04 · Simulador" title={<>E se chovesse <span className="italic text-grain-400">menos</span>?</>}>
-          Escolha um município e ajuste o clima da safra. Um Random Forest com {model.trees.length} árvores, exportado do Python, calcula a produtividade esperada aqui mesmo no navegador, sem servidor.
+        <SectionHeader eyebrow={t.sim.eyebrow} title={<TitleText t={t.sim.title} />}>
+          {t.sim.lead(model.trees.length)}
         </SectionHeader>
 
         <Reveal>
           <div className="card grid overflow-hidden lg:grid-cols-[minmax(0,380px)_1fr]">
             <div className="space-y-6 border-b border-white/[0.07] p-5 sm:p-7 lg:border-b-0 lg:border-r">
               <label className="block">
-                <span className="text-sm text-stone-400">Município</span>
+                <span className="text-sm text-stone-400">{t.sim.municipality}</span>
                 <select value={mun} onChange={(e) => select(e.target.value)} className="mt-2 w-full rounded-xl border border-white/10 bg-ink-800 px-3.5 py-2.5 text-stone-100 outline-none focus:border-grain-400/60">
                   {municipios.map((m) => <option key={m}>{m}</option>)}
                 </select>
               </label>
               <div>
-                <span className="text-sm text-stone-400">Cenário de partida</span>
+                <span className="text-sm text-stone-400">{t.sim.start}</span>
                 <div className="mt-2 grid grid-cols-3 gap-2">
                   {(["seca", "media", "chuvosa"] as const).map((k) => {
                     const Icon = k === "seca" ? Sun : k === "chuvosa" ? CloudRain : Thermometer;
@@ -114,34 +116,34 @@ export function Simulator() {
                   })}
                 </div>
               </div>
-              <Slider label="Precipitação anual" unit="mm" value={clim.chuva} min={r.precipitacao_total_mm[0]} max={r.precipitacao_total_mm[1]} step={10} onChange={set("chuva")} color="#6fb7e8" format={fmt0} />
-              <Slider label="Temperatura máxima média" unit="°C" value={clim.tmax} min={r.temp_max_media_anual_C[0]} max={r.temp_max_media_anual_C[1]} step={0.1} onChange={set("tmax")} color="#f4a261" format={fmt1} />
-              <Slider label="Temperatura mínima média" unit="°C" value={clim.tmin} min={r.temp_min_media_anual_C[0]} max={r.temp_min_media_anual_C[1]} step={0.1} onChange={set("tmin")} color="#e9c46a" format={fmt1} />
-              <Slider label="Umidade relativa média" unit="%" value={clim.ur} min={r.umidade_relativa_media_pct[0]} max={r.umidade_relativa_media_pct[1]} step={0.1} onChange={set("ur")} color="#7bd389" format={fmt1} />
+              <Slider label={t.sim.rain} unit="mm" value={clim.chuva} min={r.precipitacao_total_mm[0]} max={r.precipitacao_total_mm[1]} step={10} onChange={set("chuva")} color="#6fb7e8" format={fmt0} />
+              <Slider label={t.sim.tmax} unit="°C" value={clim.tmax} min={r.temp_max_media_anual_C[0]} max={r.temp_max_media_anual_C[1]} step={0.1} onChange={set("tmax")} color="#f4a261" format={fmt1} />
+              <Slider label={t.sim.tmin} unit="°C" value={clim.tmin} min={r.temp_min_media_anual_C[0]} max={r.temp_min_media_anual_C[1]} step={0.1} onChange={set("tmin")} color="#e9c46a" format={fmt1} />
+              <Slider label={t.sim.rh} unit="%" value={clim.ur} min={r.umidade_relativa_media_pct[0]} max={r.umidade_relativa_media_pct[1]} step={0.1} onChange={set("ur")} color="#7bd389" format={fmt1} />
               <button onClick={() => { setClim(presets.media.c); setPreset("media"); }} className="flex items-center gap-2 text-sm text-stone-500 transition hover:text-stone-200">
-                <RotateCcw size={14} /> Voltar à média do município
+                <RotateCcw size={14} /> {t.sim.reset}
               </button>
             </div>
 
             <div className="p-5 sm:p-7">
               <div className="flex flex-wrap items-end justify-between gap-6">
                 <div>
-                  <p className="text-sm text-stone-400">Produtividade prevista · {mun}</p>
+                  <p className="text-sm text-stone-400">{t.sim.predicted(mun)}</p>
                   <p className="mt-1 font-display text-6xl font-medium leading-none tabular-nums text-stone-50 sm:text-7xl">
                     <AnimatedNumber value={out.p} /><span className="ml-2 font-mono text-xl text-stone-500">kg/ha</span>
                   </p>
                   <p className="num mt-3 text-stone-400">
-                    ≈ {fmt1(out.p / 60)} sc/ha · faixa das árvores (p10–p90): {fmt0(out.spread.p10)} a {fmt0(out.spread.p90)}
+                    ≈ {fmt1(out.p / 60)} {t.sim.bags} · {t.sim.spread} {fmt0(out.spread.p10)} {t.sim.to} {fmt0(out.spread.p90)}
                   </p>
                 </div>
                 <div className={`rounded-2xl px-4 py-3 ${delta >= 0 ? "bg-leaf-500/15 text-leaf-300" : "bg-clay-500/15 text-clay-400"}`}>
-                  <p className="text-xs opacity-80">vs. média observada do município</p>
+                  <p className="text-xs opacity-80">{t.sim.vsHist}</p>
                   <p className="num text-2xl">{delta >= 0 ? "+" : "−"}{fmt0(Math.abs(delta))} <span className="text-sm">kg/ha</span></p>
                 </div>
               </div>
 
               <div className="mt-8">
-                <p className="text-sm text-stone-400">Curva de resposta à chuva <span className="text-stone-600">(demais variáveis fixas)</span></p>
+                <p className="text-sm text-stone-400">{t.sim.curve} <span className="text-stone-600">{t.sim.curveNote}</span></p>
                 <div className="mt-3 h-64">
                   <ResponsiveContainer>
                     <ComposedChart data={out.curve} margin={{ top: 10, right: 10, bottom: 0, left: -10 }}>
@@ -172,19 +174,19 @@ export function Simulator() {
 
         <div className="mt-6 grid gap-6 lg:grid-cols-[1.3fr_1fr]">
           <Reveal className="card p-5 sm:p-6">
-            <h3 className="font-medium text-stone-100">Quão bom é o modelo do navegador?</h3>
-            <p className="text-sm text-stone-500">Observado × previsto fora da amostra (validação cruzada 5-fold)</p>
+            <h3 className="font-medium text-stone-100">{t.sim.qualTitle}</h3>
+            <p className="text-sm text-stone-500">{t.sim.qualSub}</p>
             <div className="mt-4 h-72">
               <ResponsiveContainer>
                 <ScatterChart margin={{ top: 10, right: 10, bottom: 0, left: -10 }}>
                   <CartesianGrid stroke="rgba(255,255,255,.05)" />
-                  <XAxis type="number" dataKey="prod" name="Observado" domain={[2000, 5000]} ticks={[2000, 3000, 4000, 5000]} {...axis} tickFormatter={fmt0} />
-                  <YAxis type="number" dataKey="pred_oof" name="Previsto" domain={[2000, 5000]} ticks={[2000, 3000, 4000, 5000]} {...axis} tickFormatter={fmt0} />
+                  <XAxis type="number" dataKey="prod" name={t.sim.observed} domain={[2000, 5000]} ticks={[2000, 3000, 4000, 5000]} {...axis} tickFormatter={fmt0} />
+                  <YAxis type="number" dataKey="pred_oof" name={t.sim.predictedAxis} domain={[2000, 5000]} ticks={[2000, 3000, 4000, 5000]} {...axis} tickFormatter={fmt0} />
                   <ReferenceLine segment={[{ x: 2000, y: 2000 }, { x: 5000, y: 5000 }]} stroke="rgba(255,255,255,.25)" strokeDasharray="4 4" />
                   <Tooltip content={({ active, payload }) => {
                     if (!active || !payload?.length) return null;
                     const p = payload[0].payload as Row;
-                    return <TipBox title={`${p.mun} · ${p.safra}`}><div className="num">obs. {fmt0(p.prod)} · prev. {fmt0(p.pred_oof)}</div></TipBox>;
+                    return <TipBox title={`${p.mun} · ${p.safra}`}><div className="num">{t.sim.obs} {fmt0(p.prod)} · {t.sim.pred} {fmt0(p.pred_oof)}</div></TipBox>;
                   }} />
                   <Scatter data={rows} fill="#e9c46a" fillOpacity={0.45} shape="circle" isAnimationActive={false} />
                 </ScatterChart>
@@ -193,18 +195,18 @@ export function Simulator() {
           </Reveal>
           <Reveal delay={0.1} className="card flex flex-col justify-between p-5 sm:p-6">
             <div>
-              <h3 className="font-medium text-stone-100">Ficha técnica</h3>
+              <h3 className="font-medium text-stone-100">{t.sim.sheet}</h3>
               <dl className="mt-5 space-y-3 text-sm">
-                <Row2 k="Algoritmo" v={`Random Forest · ${model.params.n_estimators} árvores · prof. máx. ${model.params.max_depth}`} />
-                <Row2 k="Entradas" v="lat., long., temp. máx., temp. mín., chuva, umidade" />
-                <Row2 k="R² (5-fold aleatório)" v={fmt2(v.kfold5.r2)} mono />
-                <Row2 k="R² (5-fold por município)" v={fmt2(v.groupkfold5_municipio.r2)} mono />
-                <Row2 k="RMSE / MAE" v={`${fmt0(v.kfold5.rmse)} / ${fmt0(v.kfold5.mae)} kg/ha`} mono />
-                <Row2 k="Tamanho" v="~430 kB em JSON, inferência em TypeScript" />
+                <Row2 k={t.sim.rows.algo} v={t.sim.rows.algoV(model.params.n_estimators, model.params.max_depth)} />
+                <Row2 k={t.sim.rows.inputs} v={t.sim.rows.inputsV} />
+                <Row2 k={t.sim.rows.r2k} v={fmt2(v.kfold5.r2)} mono />
+                <Row2 k={t.sim.rows.r2g} v={fmt2(v.groupkfold5_municipio.r2)} mono />
+                <Row2 k={t.sim.rows.err} v={`${fmt0(v.kfold5.rmse)} / ${fmt0(v.kfold5.mae)} kg/ha`} mono />
+                <Row2 k={t.sim.rows.size} v={t.sim.rows.sizeV} />
               </dl>
             </div>
             <p className="mt-6 text-xs leading-relaxed text-stone-500">
-              Versão compacta, com menos variáveis que os modelos da dissertação, para caber no navegador. O desempenho fica próximo ao do Random Forest completo (R² 0,55). Valores fora da faixa observada não são extrapolados.
+              {t.sim.note}
             </p>
           </Reveal>
         </div>

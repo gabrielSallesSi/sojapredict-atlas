@@ -29,6 +29,10 @@ export function Counter({ value, format = (n) => String(Math.round(n)), classNam
   return <motion.span ref={ref} className={className}>{text}</motion.span>;
 }
 
+export function TitleText({ t }: { t: { a: string; em: string; b: string } }) {
+  return <>{t.a}<span className="italic text-grain-400">{t.em}</span>{t.b}</>;
+}
+
 export function SectionHeader({ eyebrow, title, children, id }: { eyebrow: string; title: ReactNode; children?: ReactNode; id?: string }) {
   return (
     <Reveal className="mb-10 max-w-3xl">

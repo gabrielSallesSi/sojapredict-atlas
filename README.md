@@ -12,6 +12,7 @@ Parte da dissertação *"Previsão da produtividade da soja em Goiás por aprend
 - **Gráficos interativos** de tendência regional, dispersão clima × produtividade e correlações (Recharts)
 - **Comparação de 4 modelos** (Linear, Random Forest, XGBoost, MLP) com validação cruzada e teste de Diebold-Mariano
 - **ML no navegador**: Random Forest de 80 árvores treinado no scikit-learn, exportado para JSON e executado em TypeScript, com teste automatizado que garante as mesmas previsões do Python
+- **Bilíngue (PT-BR / EN)**: seletor no menu, detecção do idioma do navegador, escolha salva e link direto com `?lang=en`
 - 100% estático: funciona no GitHub Pages e na Vercel (plano gratuito)
 
 ## Stack

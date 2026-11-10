@@ -16,9 +16,10 @@ interface Props {
   tooltip?: (name: string) => ReactNode;
   extraPoints?: MapPoint[];
   className?: string;
+  label?: string;
 }
 
-export function GoiasMap({ geo, fill, selected, onSelect, tooltip, extraPoints = [], className }: Props) {
+export function GoiasMap({ geo, fill, selected, onSelect, tooltip, extraPoints = [], className, label = "Goiás" }: Props) {
   const [hover, setHover] = useState<{ name: string; x: number; y: number } | null>(null);
   const wrap = useRef<HTMLDivElement>(null);
   const { paths, project } = useMemo(() => {
@@ -39,7 +40,7 @@ export function GoiasMap({ geo, fill, selected, onSelect, tooltip, extraPoints =
 
   return (
     <div ref={wrap} className={`relative ${className ?? ""}`} onPointerLeave={() => setHover(null)}>
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Mapa dos municípios de Goiás">
+      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label={label}>
         <defs>
           <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="6" result="b" />

@@ -1,0 +1,386 @@
+{
+ "n_total": 660,
+ "n_municipios": 55,
+ "anos": [
+  2014,
+  2015,
+  2016,
+  2017,
+  2018,
+  2019,
+  2020,
+  2021,
+  2022,
+  2023,
+  2024,
+  2025
+ ],
+ "prod_mean": 3285.9,
+ "prod_std": 462.4,
+ "prod_cv": 14.1,
+ "prod_min": 2151,
+ "prod_max": 4840,
+ "normalidade_prod_KS_p": 0.2901,
+ "levene_regioes_p": 0.1683,
+ "anova": {
+  "F_R2": 2.4446,
+  "p_R2": 0.0798,
+  "F_RMSE": 1.8305,
+  "p_RMSE": 0.1591,
+  "H_R2": 5.962,
+  "pH_R2": 0.1135,
+  "H_RMSE": 5.7176,
+  "pH_RMSE": 0.1262
+ },
+ "residuos_linear": {
+  "SW_W": 0.988,
+  "SW_p": 0.3081,
+  "BP_LM": 30.7329,
+  "BP_p": 0.006,
+  "DW": 1.916
+ },
+ "train_test": {
+  "T1_Linear": {
+   "R2_train": 0.5198,
+   "R2_test": 0.4597,
+   "RMSE_test": 318.44,
+   "MAE_test": 249.6,
+   "MAPE_test": 7.63,
+   "NSE": 0.4597,
+   "Bias": 13.34
+  },
+  "T2_RandomForest": {
+   "R2_train": 0.8808,
+   "R2_test": 0.5619,
+   "RMSE_test": 286.75,
+   "MAE_test": 225.31,
+   "MAPE_test": 6.88,
+   "NSE": 0.5619,
+   "Bias": 30.19
+  },
+  "T3_XGBoost": {
+   "R2_train": 0.9325,
+   "R2_test": 0.5399,
+   "RMSE_test": 293.86,
+   "MAE_test": 227.1,
+   "MAPE_test": 6.92,
+   "NSE": 0.5399,
+   "Bias": 44.5
+  },
+  "T4_MLP": {
+   "R2_train": 0.5133,
+   "R2_test": 0.4508,
+   "RMSE_test": 321.06,
+   "MAE_test": 259.26,
+   "MAPE_test": 7.85,
+   "NSE": 0.4508,
+   "Bias": 14.29
+  }
+ },
+ "cv_summary": {
+  "T1_Linear": {
+   "R2_mean": 0.4667,
+   "R2_std": 0.0954,
+   "RMSE_mean": 331.52,
+   "RMSE_std": 31.18,
+   "MAE_mean": 265.46
+  },
+  "T2_RandomForest": {
+   "R2_mean": 0.5508,
+   "R2_std": 0.0724,
+   "RMSE_mean": 304.51,
+   "RMSE_std": 29.08,
+   "MAE_mean": 242.21
+  },
+  "T3_XGBoost": {
+   "R2_mean": 0.5299,
+   "R2_std": 0.0939,
+   "RMSE_mean": 310.45,
+   "RMSE_std": 29.28,
+   "MAE_mean": 244.47
+  },
+  "T4_MLP": {
+   "R2_mean": 0.432,
+   "R2_std": 0.1467,
+   "RMSE_mean": 342.45,
+   "RMSE_std": 59.49,
+   "MAE_mean": 267.27
+  }
+ },
+ "diebold_mariano": {
+  "T1_Linear_vs_T2_RandomForest": {
+   "DM": 4.7228,
+   "p": 0.0,
+   "sig": "*"
+  },
+  "T1_Linear_vs_T3_XGBoost": {
+   "DM": 3.0123,
+   "p": 0.0026,
+   "sig": "*"
+  },
+  "T1_Linear_vs_T4_MLP": {
+   "DM": -0.8778,
+   "p": 0.3801,
+   "sig": "n.s."
+  },
+  "T2_RandomForest_vs_T3_XGBoost": {
+   "DM": -1.5668,
+   "p": 0.1172,
+   "sig": "n.s."
+  },
+  "T2_RandomForest_vs_T4_MLP": {
+   "DM": -2.2648,
+   "p": 0.0235,
+   "sig": "*"
+  },
+  "T3_XGBoost_vs_T4_MLP": {
+   "DM": -1.8729,
+   "p": 0.0611,
+   "sig": "n.s."
+  }
+ },
+ "importancia_rf_top5": [
+  {
+   "Feature": "etr_anual_mm",
+   "Importance": 0.1445022292277418
+  },
+  {
+   "Feature": "precipitacao_total_mm",
+   "Importance": 0.1194506163824759
+  },
+  {
+   "Feature": "indice_aridez",
+   "Importance": 0.1091286175400692
+  },
+  {
+   "Feature": "razao_etr_pet",
+   "Importance": 0.0983225615545568
+  },
+  {
+   "Feature": "def_hidrico_mm",
+   "Importance": 0.0955403924251015
+  }
+ ],
+ "importancia_xgb_top5": [
+  {
+   "Feature": "etr_anual_mm",
+   "Importance": 1002973.875
+  },
+  {
+   "Feature": "precipitacao_total_mm",
+   "Importance": 646500.5
+  },
+  {
+   "Feature": "def_hidrico_mm",
+   "Importance": 449230.34375
+  },
+  {
+   "Feature": "razao_etr_pet",
+   "Importance": 407428.28125
+  },
+  {
+   "Feature": "arm_final_mm",
+   "Importance": 307091.1875
+  }
+ ],
+ "importancia_perm_top5": [
+  {
+   "Feature": "temp_max_media_anual_C",
+   "Importance_mean": 0.0719932835366774,
+   "Importance_std": 0.0209848438938453
+  },
+  {
+   "Feature": "etr_anual_mm",
+   "Importance_mean": 0.0530138801654258,
+   "Importance_std": 0.0142805380080122
+  },
+  {
+   "Feature": "indice_aridez",
+   "Importance_mean": 0.050988814047358,
+   "Importance_std": 0.0142282004956441
+  },
+  {
+   "Feature": "umidade_relativa_media_pct",
+   "Importance_mean": 0.0460705104839641,
+   "Importance_std": 0.0159534702455837
+  },
+  {
+   "Feature": "precipitacao_total_mm",
+   "Importance_mean": 0.0433277789912046,
+   "Importance_std": 0.0122379337559431
+  }
+ ],
+ "prod_por_regiao": {
+  "Centro": {
+   "mean": 3218.9,
+   "std": 412.4,
+   "count": 120
+  },
+  "Leste": {
+   "mean": 3387.2,
+   "std": 424.0,
+   "count": 120
+  },
+  "Norte": {
+   "mean": 2912.7,
+   "std": 351.9,
+   "count": 120
+  },
+  "Sudoeste": {
+   "mean": 3555.1,
+   "std": 440.8,
+   "count": 180
+  },
+  "Sul": {
+   "mean": 3221.3,
+   "std": 388.6,
+   "count": 120
+  }
+ },
+ "importancia_rf": [
+  {
+   "Feature": "etr_anual_mm",
+   "Importance": 0.1445
+  },
+  {
+   "Feature": "precipitacao_total_mm",
+   "Importance": 0.11945
+  },
+  {
+   "Feature": "indice_aridez",
+   "Importance": 0.10913
+  },
+  {
+   "Feature": "razao_etr_pet",
+   "Importance": 0.09832
+  },
+  {
+   "Feature": "def_hidrico_mm",
+   "Importance": 0.09554
+  },
+  {
+   "Feature": "chuva_por_grau",
+   "Importance": 0.07581
+  },
+  {
+   "Feature": "temp_max_media_anual_C",
+   "Importance": 0.06188
+  },
+  {
+   "Feature": "arm_final_mm",
+   "Importance": 0.06084
+  },
+  {
+   "Feature": "umidade_relativa_media_pct",
+   "Importance": 0.05389
+  },
+  {
+   "Feature": "temp_media_anual_C",
+   "Importance": 0.05371
+  },
+  {
+   "Feature": "temp_min_media_anual_C",
+   "Importance": 0.05135
+  },
+  {
+   "Feature": "pet_anual_mm",
+   "Importance": 0.04573
+  },
+  {
+   "Feature": "amplitude_termica_C",
+   "Importance": 0.02961
+  },
+  {
+   "Feature": "exc_hidrico_mm",
+   "Importance": 0.00023
+  }
+ ],
+ "importancia_permutation": [
+  {
+   "Feature": "temp_max_media_anual_C",
+   "Importance_mean": 0.07199,
+   "Importance_std": 0.02098
+  },
+  {
+   "Feature": "etr_anual_mm",
+   "Importance_mean": 0.05301,
+   "Importance_std": 0.01428
+  },
+  {
+   "Feature": "indice_aridez",
+   "Importance_mean": 0.05099,
+   "Importance_std": 0.01423
+  },
+  {
+   "Feature": "umidade_relativa_media_pct",
+   "Importance_mean": 0.04607,
+   "Importance_std": 0.01595
+  },
+  {
+   "Feature": "precipitacao_total_mm",
+   "Importance_mean": 0.04333,
+   "Importance_std": 0.01224
+  },
+  {
+   "Feature": "temp_min_media_anual_C",
+   "Importance_mean": 0.03907,
+   "Importance_std": 0.00916
+  },
+  {
+   "Feature": "razao_etr_pet",
+   "Importance_mean": 0.03719,
+   "Importance_std": 0.0132
+  },
+  {
+   "Feature": "def_hidrico_mm",
+   "Importance_mean": 0.0361,
+   "Importance_std": 0.01238
+  },
+  {
+   "Feature": "temp_media_anual_C",
+   "Importance_mean": 0.02781,
+   "Importance_std": 0.0106
+  },
+  {
+   "Feature": "arm_final_mm",
+   "Importance_mean": 0.02226,
+   "Importance_std": 0.01009
+  },
+  {
+   "Feature": "pet_anual_mm",
+   "Importance_mean": 0.01706,
+   "Importance_std": 0.00351
+  },
+  {
+   "Feature": "chuva_por_grau",
+   "Importance_mean": 0.01698,
+   "Importance_std": 0.00534
+  },
+  {
+   "Feature": "amplitude_termica_C",
+   "Importance_mean": 0.01003,
+   "Importance_std": 0.0064
+  },
+  {
+   "Feature": "exc_hidrico_mm",
+   "Importance_mean": -0.0,
+   "Importance_std": 0.0
+  }
+ ],
+ "corr_prod": {
+  "temp_media_anual_C": -0.308,
+  "temp_max_media_anual_C": -0.24,
+  "temp_min_media_anual_C": -0.263,
+  "amplitude_termica_C": -0.044,
+  "precipitacao_total_mm": 0.671,
+  "umidade_relativa_media_pct": 0.302,
+  "pet_anual_mm": -0.342,
+  "etr_anual_mm": 0.664,
+  "arm_final_mm": 0.453,
+  "def_hidrico_mm": -0.639,
+  "exc_hidrico_mm": 0.091,
+  "razao_etr_pet": 0.652,
+  "indice_aridez": 0.659,
+  "chuva_por_grau": 0.646
+ }
+}
